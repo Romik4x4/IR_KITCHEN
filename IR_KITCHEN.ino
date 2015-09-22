@@ -27,6 +27,11 @@
 #define PORT3  6
 #define PORT4  7
 
+int port[4] = { 
+  PORT1,PORT2,PORT3,PORT4 };
+int but[8] = { 
+  K1,K2,K3,K4,Z1,Z2,Z3,Z4 };
+
 IRrecv irrecv(RECV_PIN);
 
 decode_results results;
@@ -34,14 +39,14 @@ decode_results results;
 void setup()
 {
   pinMode(A0,OUTPUT);
-  
-  pinMode(PORT1,OUTPUT); digitalWrite(PORT1,LOW);
-  pinMode(PORT2,OUTPUT); digitalWrite(PORT2,LOW);
-  pinMode(PORT3,OUTPUT); digitalWrite(PORT3,LOW);
-  pinMode(PORT4,OUTPUT); digitalWrite(PORT4,LOW);
-  
+
+  for(int i=0;i<4;i++) {
+    pinMode(port[i],OUTPUT); 
+    digitalWrite(port[i],LOW);
+  }
+
   digitalWrite(A0,HIGH);
-  
+
   if (DEBUG) Serial.begin(9600);
 
   irrecv.enableIRIn(); 
@@ -50,22 +55,21 @@ void setup()
 void loop() {
 
   if (irrecv.decode(&results)) {  
-   
+
     if (DEBUG) Serial.println(results.value);
-   
-   switch(results.value) {     
-    case Z1: digitalWrite(A0,LOW);  delay(200); digitalWrite(A0,HIGH); break;
-    case Z2: digitalWrite(A0,LOW);  delay(200); digitalWrite(A0,HIGH);break;
-    case Z3: digitalWrite(A0,LOW);  delay(200); digitalWrite(A0,HIGH);break;
-    case Z4: digitalWrite(A0,LOW);  delay(200); digitalWrite(A0,HIGH);break;
-    case K1: digitalWrite(A0,LOW);  delay(200); digitalWrite(A0,HIGH);break;
-    case K2: digitalWrite(A0,LOW);  delay(200); digitalWrite(A0,HIGH);break;
-    case K3: digitalWrite(A0,LOW);  delay(200); digitalWrite(A0,HIGH);break;
-    case K4: digitalWrite(A0,LOW);  delay(200); digitalWrite(A0,HIGH);break;      
-   }
-    
+
+    for (int i=0;i<8;i++) {
+      if (results.value == but[i]) { 
+        if (digitalRead(port[i] == HIGH)) digitalWrite(port[i],LOW); 
+        else digitalWrite(port[i],HIGH);
+      }
+    }
+
     irrecv.resume();
   }
-  
+
 }
+
+
+
 
