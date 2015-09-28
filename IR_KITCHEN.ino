@@ -8,29 +8,19 @@
 
 #include <IRremote.h>
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define K1  16724175
-#define K2  16718055
-#define K3  16743045
-#define K4  16716015
+#define K2  116718055
+#define K3  116743045
+#define K4  116716015
 
 #define Z1  16582903
-#define Z2  16615543
-#define Z3  16599223
-#define Z4  16591063
+#define Z2  116615543
+#define Z3  116599223
+#define Z4  116591063
 
 #define  RECV_PIN 3
-
-#define PORT1  4
-#define PORT2  5
-#define PORT3  6
-#define PORT4  7
-
-int port[4] = { 
-  PORT1,PORT2,PORT3,PORT4 };
-int but[8] = { 
-  K1,K2,K3,K4,Z1,Z2,Z3,Z4 };
 
 IRrecv irrecv(RECV_PIN);
 
@@ -39,36 +29,69 @@ decode_results results;
 void setup()
 {
   pinMode(A0,OUTPUT);
-
-  for(int i=0;i<4;i++) {
-    pinMode(port[i],OUTPUT); 
-    digitalWrite(port[i],LOW);
-  }
+  pinMode(A1,OUTPUT);
+  pinMode(A2,OUTPUT);
+  pinMode(A3,OUTPUT);
 
   digitalWrite(A0,HIGH);
+  digitalWrite(A1,HIGH);
+  digitalWrite(A2,HIGH);
+  digitalWrite(A3,HIGH);
 
   if (DEBUG) Serial.begin(9600);
 
   irrecv.enableIRIn(); 
+
 }
 
 void loop() {
 
   if (irrecv.decode(&results)) {  
 
-    if (DEBUG) Serial.println(results.value);
+    switch (results.value) {
 
-    for (int i=0;i<8;i++) {
-      if (results.value == but[i]) { 
-        if (digitalRead(port[i] == HIGH)) digitalWrite(port[i],LOW); 
-        else digitalWrite(port[i],HIGH);
-      }
+    case K1: 
+      if (digitalRead(A0) == HIGH) digitalWrite(A0,LOW); 
+      else digitalWrite(A0,HIGH); 
+      break;
+    case K2: 
+      if (digitalRead(A1) == HIGH) digitalWrite(A1,LOW); 
+      else digitalWrite(A1,HIGH); 
+      break;
+    case K3: 
+      if (digitalRead(A2) == HIGH) digitalWrite(A2,LOW); 
+      else digitalWrite(A2,HIGH); 
+      break;
+    case K4: 
+      if (digitalRead(A3) == HIGH) digitalWrite(A3,LOW); 
+      else digitalWrite(A3,HIGH); 
+      break;
+
+    case Z1: 
+      if (digitalRead(A0) == HIGH) digitalWrite(A0,LOW); 
+      else digitalWrite(A0,HIGH); 
+      break;
+    case Z2: 
+      if (digitalRead(A1) == HIGH) digitalWrite(A1,LOW); 
+      else digitalWrite(A1,HIGH); 
+      break;
+    case Z3: 
+      if (digitalRead(A2) == HIGH) digitalWrite(A2,LOW); 
+      else digitalWrite(A2,HIGH); 
+      break;
+    case Z4: 
+      if (digitalRead(A3) == HIGH) digitalWrite(A3,LOW); 
+      else digitalWrite(A3,HIGH); 
+      break;
     }
 
     irrecv.resume();
   }
 
 }
+
+
+
 
 
 
